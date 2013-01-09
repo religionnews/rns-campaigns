@@ -29,7 +29,7 @@ RNS Campaigns was originally developed, and currently works fairly well, for [Re
 1. When you're finished editing and scheduling your campaign, change the status to Pending Review and click "Save as Pending." **You will not be able to edit the campaign once you change the status**.
 1. Click "Publish" to send your campaign (or "Schedule," if you changed the publish date).
 
-## Limitations ##
+## Current limitations ##
 
 1. You can send to only one List ID.
 1. The title of the campaign will automatically be the email subject line and the campaign name in Campaign Monitor.
@@ -38,7 +38,7 @@ RNS Campaigns was originally developed, and currently works fairly well, for [Re
 1. `TextUrl`s are not specified.
 1. Campaign Monitor requires that the URL of your campaign be publicly accessible. That means that you will not be able to send a campaign though a local installation.
 
-## Why require saving the campaign as 'Pending Review'? ##
+## Why require saving the campaign as Pending Review? ##
 
 In my testing, I found that WordPress would sometimes send incorrect information to Campaign Monitor if a campaign was published without being saved. For example, if you created a new campaign and immediately published it, Campaign Monitor would register the subject line as "Auto Draft."
 
