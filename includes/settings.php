@@ -18,10 +18,11 @@ function rns_campaigns_settings_section_page() {
     <h2>RNS Campaigns</h2>
     <form action="options.php" method="post" accept-charset="utf-8">
       <?php
+      rns_campaigns_update_available_lists();
       settings_fields( 'rns_campaigns_options' );
       do_settings_sections( 'rns_campaigns' );
       ?>
-      <input type="submit" name="Submit" id="" value="Save changes" />
+      <p><input type="submit" name="Submit" id="" value="Save changes" /></p>
     </form>
   </div><!--/.wrap-->
   <?php
@@ -37,9 +38,10 @@ function rns_campaigns_admin_init() {
   add_settings_section( 'rns_campaigns_settings_section', 'Settings', 'rns_campaigns_settings_section_text', 'rns_campaigns' );
     add_settings_field( 'rns_campaigns_api_key', 'Your API Key', 'rns_campaigns_api_key_input', 'rns_campaigns', 'rns_campaigns_settings_section' );
     add_settings_field( 'rns_campaigns_client_id', 'Campaign\'s Client ID', 'rns_campaigns_client_id_input', 'rns_campaigns', 'rns_campaigns_settings_section' );
-    add_settings_field( 'rns_campaigns_list_id', 'List ID', 'rns_campaigns_list_id_input', 'rns_campaigns', 'rns_campaigns_settings_section' );
     add_settings_field( 'rns_campaigns_from_name', 'Campaign\'s \'From\' Name', 'rns_campaigns_from_name_input', 'rns_campaigns', 'rns_campaigns_settings_section' );
     add_settings_field( 'rns_campaigns_from_email', 'Campaign\'s \'From\' Email Address', 'rns_campaigns_from_email_input', 'rns_campaigns', 'rns_campaigns_settings_section' );
+    add_settings_field( 'rns_campaigns_default_lists', 'Always Send To', 'rns_campaigns_lists_available_cboxes', 'rns_campaigns', 'rns_campaigns_settings_section' );
+    add_settings_field( 'rns_campaigns_hide_metabox', 'Hide Lists Metabox', 'rns_campaigns_hide_metabox_input', 'rns_campaigns', 'rns_campaigns_settings_section' );
 }
 
 /**
@@ -92,11 +94,37 @@ function rns_campaigns_from_email_input() {
   echo "<input type='text' name='rns_campaigns_options[from_email]' id='from_email' value='$from_email' size='50' />";
 }
 
+function rns_campaigns_lists_available_cboxes() {
+  $available_lists = get_option( 'rns_campaigns_lists' );
+  $options = get_option( 'rns_campaigns_options' );
+  $always_send_to = $options['always_send_to'];
+
+  echo '<fieldset>';
+  echo '<legend class="screen-reader-text">Alway send to</legend>';
+
+  foreach ( $available_lists as $name => $ID ) {
+    $checked = $is_enabled = in_array( $ID, $always_send_to );
+    echo '<label for="rns_campaigns_options[always_send_to][' . $name . ']">';
+    echo '<input name="rns_campaigns_options[always_send_to][' . $name . ']" type="checkbox" id="rns_campaigns_options[always_send_to][' . $name . ']" value="' . $ID . '"' . checked( $checked, true, false ) . '> ';
+    echo $name;
+    echo '</label><br>';
+  }
+
+  echo '</fieldset>';
+  echo '<p><strong>Warning: "Always" means always!</strong></p>';
+}
+
+function rns_campaigns_hide_metabox_input() {
+  $options = get_option( 'rns_campaigns_options' );
+  $checked = $hide_metabox = $options['hide_metabox'];
+  echo "<input type='checkbox' name='rns_campaigns_options[hide_metabox]' id='hide_metabox' value='1' " . checked( $checked, true, false ) . " />";
+}
+
 function rns_campaigns_validate_options( $input ) {
   /* Create an empty array and collect in this array only the values you expect */
   $valid = array();
 
-  if ( ctype_alnum( $input['api_key'] ) ) {
+  if ( empty( $input['api_key'] ) || ctype_alnum( $input['api_key'] ) ) {
     $valid['api_key'] = $input['api_key'];
   } else {
     add_settings_error(
@@ -107,24 +135,13 @@ function rns_campaigns_validate_options( $input ) {
     );
   }
 
-  if ( ctype_alnum( $input['client_id'] ) ) {
+  if ( empty( $input['client_id'] ) || ctype_alnum( $input['client_id'] ) ) {
     $valid['client_id'] = $input['client_id'];
   } else {
     add_settings_error(
       'rns_campaigns_client_id',
       'rns_campaigns_error',
       'Error: Client ID may contain only letters and numbers',
-      'error'
-    );
-  }
-
-  if ( ctype_alnum( $input['list_id'] ) ) {
-    $valid['list_id'] = $input['list_id'];
-  } else {
-    add_settings_error(
-      'rns_campaigns_list_id',
-      'rns_campaigns_error',
-      'Error: List ID may contain only letters and numbers',
       'error'
     );
   }
@@ -149,17 +166,21 @@ function rns_campaigns_validate_options( $input ) {
     );
   }
 
+  /* $input['hide_metabox'] should be '1' or '0' */
+  $valid['hide_metabox'] = $input['hide_metabox'] == '1' ? '1' : '0';
+
+  foreach ( $input['always_send_to'] as $name => $id ) {
+    if ( ctype_alnum( $id ) ) {
+      $valid['always_send_to'][] = $id;
+    } else {
+      add_settings_error(
+        'rns_campaigns_lists_enabled',
+        'rns_campaigns_error',
+        'Error saving default lists',
+        'error'
+      );
+    }
+  }
+
   return $valid;
-}
-
-
-/**
- * Warn users that Pending posts cannot be edited.
- */
-function rns_campaigns_pending_campaign_admin_notice() {
-    echo '
-      <div class="error">
-         <p>This Campaign can no longer be edited. Any changes you make will not be saved. Click Publish to have Campaign Monitor send it at the time listed.</p>
-      </div>
-    ';
 }
