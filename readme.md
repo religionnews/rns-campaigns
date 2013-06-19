@@ -17,6 +17,7 @@ RNS Campaigns was developed, and works fairly well, for [Religion News Service](
 
 ### June 19, 2013 ###
 
+* Campaigns no longer need to be set to 'Pending Review' before sending
 * You can now send campaigns to one or multiple lists
 * Errors from Campaign Monitor are handled more gracefully
 * Support for scheduling campaigns has been removed, but might return eventually
