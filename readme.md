@@ -11,13 +11,21 @@ In your theme, include a `single-rns_campaign.php` file that contains your campa
 
 To send a newsletter, create and publish a new Campaign from your Dashboard in (mostly) the normal fashion. Campaigns can be published immediately or scheduled. See the [Current limitations][] section below for some caveats to the publishing process.
 
-RNS Campaigns was originally developed, and currently works fairly well, for [Religion News Service](http://www.religionnews.com).
+RNS Campaigns was developed, and works fairly well, for [Religion News Service](http://www.religionnews.com).
+
+## Changelog ##
+
+### June 19, 2013 ###
+
+* You can now send campaigns to one or multiple lists
+* Errors from Campaign Monitor are handled more gracefully
+* Support for scheduling campaigns has been removed, but might return eventually
 
 ## Installation ##
 
 1. Unzip the contents and add the `rns-campaigns` directory to the `/wp-content/plugins/` directory
 1. Activate the plugin through the Plugins menu in WordPress
-1. Under Settings > RNS Campaigns, add an API Key, Client ID, List ID, and "From" name and email address
+1. Under Settings > RNS Campaigns, add an API Key, Client ID, and "From" name and email address. There are also options for specifying lists that campaigns will always be sent to and for hiding the lists metabox on the edit page.
 1. Optionally customize the "Campaigns" post type with custom fields or other content you want to include in your campaigns
 1. Include a `single-rns_campaign.php` file in your theme that contains your campaign template and any necessary WordPress template tags.
 
@@ -25,24 +33,14 @@ RNS Campaigns was originally developed, and currently works fairly well, for [Re
 
 1. In your Dashboard, go to Campaigns > Add New.
 1. Edit your campaign as you would a normal post. The fields involved will depend on the kind of content in your campaign template.
-1. If you want to send the campaign in the future, be sure to schedule it as you would a normal post.
-1. When you're finished editing and scheduling your campaign, change the status to Pending Review and click "Save as Pending." **You will not be able to edit the campaign once you change the status**.
-1. Click "Publish" to send your campaign (or "Schedule," if you changed the publish date).
+1. Click "Publish" to send your campaign.
 
 ## Current limitations ##
 
-1. You can send to only one List ID.
 1. The title of the campaign will automatically be the email subject line and the campaign name in Campaign Monitor.
-1. Scheduled campaigns cannot be rescheduled or cancelled through the Dashboard. You need to modify them directly in Campaign Monitor.
-1. Error responses from Campaign Monitor (e.g., if a campaign contains JavaScript) are handled gracelessly.
 1. `TextUrl`s are not specified.
 1. Campaign Monitor requires that the URL of your campaign be publicly accessible. That means that you will not be able to send a campaign though a local installation.
-
-## Why require saving the campaign as Pending Review? ##
-
-In my testing, I found that WordPress would sometimes send incorrect information to Campaign Monitor if a campaign was published without being saved. For example, if you created a new campaign and immediately published it, Campaign Monitor would register the subject line as "Auto Draft."
-
-To avoid this error, the plugin hides the Publish button via CSS until the post status is set to Pending Review. Once a campaign is set to Pending Review, it then hides the Status button. Effectively, the plugin forces the user to save the campaign before sending it.
+1. Scheduling campaigns is not supported.
 
 ## License ##
 
