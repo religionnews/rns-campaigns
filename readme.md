@@ -34,6 +34,7 @@ RNS Campaigns was developed, and works fairly well, for [Religion News Service](
 
 1. In your Dashboard, go to Campaigns > Add New.
 1. Edit your campaign as you would a normal post. The fields involved will depend on the kind of content in your campaign template.
+1. Select distribution lists under "Select Recipients," if the "Hide Lists Metabox" has not been checked
 1. Click "Publish" to send your campaign.
 
 ## Current limitations ##
