@@ -9,7 +9,7 @@ The plugin creates a "Campaigns" post type. You can add custom fields to it as y
 
 In your theme, include a `single-rns_campaign.php` file that contains your campaign template along with whatever WordPress template tags you need to display your content (see an example in the `/examples` directory).
 
-To send a newsletter, create and publish a new Campaign from your Dashboard in (mostly) the normal fashion. Campaigns can be published immediately or scheduled. See the [Current limitations][] section below for some caveats to the publishing process.
+To send a newsletter, create and publish a new Campaign from your Dashboard in (mostly) the normal fashion. See the [Current limitations][] section below for some caveats to the publishing process.
 
 RNS Campaigns was developed, and works fairly well, for [Religion News Service](http://www.religionnews.com).
 
